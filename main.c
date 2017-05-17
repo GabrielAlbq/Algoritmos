@@ -63,6 +63,7 @@ int CalcPotRecursivo(int n)
     else
         return 2*CalcPotRecursivo(n-1);
 }
+int OrdenacaoIterativo
 int main()
 {
     srand(time(NULL));
