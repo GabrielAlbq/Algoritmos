@@ -56,11 +56,18 @@ int CalcPotIterativo(int n)
     return pot;
 }
 
+int CalcPotRecursivo(int n)
+{
+    if(n==1)
+        return 2;
+    else
+        return 2*CalcPotRecursivo(n-1);
+}
 int main()
 {
     srand(time(NULL));
     //int m = MaxvetorIterativo();
     //int x = MaxvetorRecursivo(4,v);
-    int z = CalcPotIterativo(4);
+    int z = CalcPotRecursivo(4);
     printf("\nmaior eh;;; %i",z);
 }
