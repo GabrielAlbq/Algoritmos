@@ -2,54 +2,54 @@
 #include<stdlib.h>
 #include <time.h>
 
-int Maxvetor()
+int MaxvetorIterativo()
 {
-    srand(time(NULL));
-    int random = rand()%10;
+    int random = 1 + (rand()%10);
     int v[random];
     int n = 0;
-    int j;
-    int aleat = 50;
     for(n=0; n<random; n++)
     {
         v[n] = rand()%50;
         printf("%d\n",v[n]);
     }
-    int maior =0;
+    int maximo = v[0];
     if(random == 1)
     {
         return v[0];
     }
     else
     {
-        for(n=0; n<random; n++)
+        for(n=1; n<random; n++)
         {
-            for(j=random; j>=0; j--)
+            if(v[n] > maximo)
             {
-                printf("nmr aleat eh %d\n",aleat);
-                if(v[n] > v[j] || v[j] >v[n])
-                {
-                    if(v[n] > maior)
-                    {
-                        maior = v[n];
-                        //printf("O maximo eh %d\n",maior);
-                    }
-                    else
-                     break;
-                }
-                else
-                {
-                    break;
-                    aleat--;
-                }
+                maximo = v[n];
             }
         }
-        printf("O maximo eh %d\n",maior);
     }
+    return maximo;
+}
+int MaxvetorRecursivo(int n,int v[])
+{
+    int x = n+1;
+    int maximo = v[n];
+    if(n==0)
+        return v[n];
+    else
+        {
+            if(maximo < v[n-1])
+            {
+                maximo = v[n-1];
+                return MaxvetorRecursivo(n-1,v);
+            }
+        }
 }
 
 int main()
 {
     srand(time(NULL));
-    Maxvetor();
+    //int m = MaxvetorIterativo();
+    int v;
+    int n = MaxvetorRecursivo(4,v);
+    printf("\nmaior eh;;; %i",n);
 }
