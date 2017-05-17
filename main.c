@@ -45,11 +45,22 @@ int MaxvetorRecursivo(int n,int v[])
         }
 }
 
+int CalcPotIterativo(int n)
+{
+    int c;
+    int pot=2;
+    for(c=1;c<n;c++)
+    {
+        pot = pot*2;
+    }
+    return pot;
+}
+
 int main()
 {
     srand(time(NULL));
     //int m = MaxvetorIterativo();
-    int v;
-    int n = MaxvetorRecursivo(4,v);
-    printf("\nmaior eh;;; %i",n);
+    //int x = MaxvetorRecursivo(4,v);
+    int z = CalcPotIterativo(4);
+    printf("\nmaior eh;;; %i",z);
 }
