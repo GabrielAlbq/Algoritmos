@@ -84,9 +84,20 @@ int OrdenacaoIterativo(int n,int v[])
     }
     return 1;
 }
-int OrdenacaoRecursivo()
+int OrdenacaoRecursivo(int n,int *v)
 {
-
+    int x=n-1;
+    if(n==1)
+        return 0;
+    else
+    {
+        if(v[x] > v[x-1])
+        {
+            return OrdenacaoRecursivo(x-1,v);
+        }
+        else
+            return 0;
+    }
 }
 int menu()
 {
@@ -95,9 +106,9 @@ int menu()
 int main()
 {
     srand(time(NULL));
-    int v[4];
+    int v[4] = {1,2,3,4};
     //int m = MaxvetorIterativo();
     //int x = MaxvetorRecursivo(4,v);
-    int z = OrdenacaoIterativo(4,v);
+    int z = OrdenacaoRecursivo(4,&v);
     printf("\nmaior eh;;; %i",z);
 }
