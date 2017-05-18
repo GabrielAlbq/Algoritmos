@@ -63,12 +63,41 @@ int CalcPotRecursivo(int n)
     else
         return 2*CalcPotRecursivo(n-1);
 }
-int OrdenacaoIterativo
+int OrdenacaoIterativo(int n,int v[])
+{
+    n=4;
+    int e;
+    int c,j;
+    for(c=0;c<n;c++)
+    {
+        scanf("%d",&v[c]);
+    }
+    for(c=0;c<n;c++)
+    {
+        for(j=c;j<n;j++)
+        {
+            if(v[c] > v[j])
+                {
+                    return 0;
+                }
+        }
+    }
+    return 1;
+}
+int OrdenacaoRecursivo()
+{
+
+}
+int menu()
+{
+
+}
 int main()
 {
     srand(time(NULL));
+    int v[4];
     //int m = MaxvetorIterativo();
     //int x = MaxvetorRecursivo(4,v);
-    int z = CalcPotRecursivo(4);
+    int z = OrdenacaoIterativo(4,v);
     printf("\nmaior eh;;; %i",z);
 }
