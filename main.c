@@ -1,162 +1,101 @@
-///Gabriel Albuquerque de Oliveira
-///EP0, 18/05/2017
-///DISCIPLINA: ALGORITMOS E ESTRUTURA DE DADOS BC3
-
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-///A funcao abaixo recebe valores aleatorios para o vetor e verifica se ele tem apenas uma posiçao ou nao, caso nao, ela percorre o vetor
-///e verifica se o valor da posiçao atual é maior que a variavel que guarda valor da posiçao 0, se sim, essa variavel recebe o valor da
-///posiçao atual até chegar ao fim do vetor, e retorna o valor maximo encontrado.
-int ContUniv;
-int MaxvetorIterativo()
-{
-    ContUniv = 0;
-    int random = 1 + (rand()%10);
-    int v[random];
-    int n = 0;
-    for(n=0; n<random; n++)
-    {
-        v[n] = rand()%50;
-        printf("%d\n",v[n]);
-    }
-    int maximo = v[0];
-    if(random == 1)
-    {
-        return v[0];
-    }
-    else
-    {
-        for(n=1; n<random; n++)
-        {
-            ContUniv++;
-            if(v[n] > maximo)
-            {
-                maximo = v[n];
-            }
-        }
-    }
-    printf("rodou %d\n",ContUniv);
-    return maximo;
-}
-///
-int MaxvetorRecursivo(int n,int v[]) //
-{
-    if(n==1)
-        return v[0];
-    else
-    {
-        int x;
-        x = MaxvetorRecursivo(n-1,v);
-        if(x > v[n-1])
-            return x;
-        else
-            return v[n-1];
-    }
-}
-///A funcao abaixo recebe um inteiro o qual vai servir parar calcular a potencia de 2, e usa um contador para multiplicar o 2, n vezes e com isso devolve essa multiplicaçao
-int CalcPotIterativo(int n)
-{
+///Funcao que gera um vetor de 'n' posi�oes aleatoriamente.
+int *Aleatorio(int n){
+    //int n;
+    //n = rand()%1000;
+    int *v = malloc(n*sizeof(int));
     int c;
-    float pot=2;
-    if(n==0)
-        return 1;
-    else
-    {
-            for(c=1; c<n; c++)
-            {
-                pot = pot*2;
-            }
+    for(c=0;c<n;c++){
+        v[c] = rand()%1000000;
     }
-    return pot;
+    for(c=0;c<n;c++)
+        printf("%d\n",v[c]);
+    return v;
 }
-///A funcao abaixo verifica se n é igual a 1 ou 0, caso sim, retorna o valor que seria a potencia de 2 com esses numeros, caso nao, devolve a multiplicacao de 2 por ele mesmo
-///N vezes
-int CalcPotRecursivo(int n)
-{
-    if(n==1)
-        return 2;
-    else if(n==0)
-        return 1;
-    else
-        return 2*CalcPotRecursivo(n-1);
+void insercao(int n, int v[]){
+    int i,j,x;
+    for(j=1;j<n;j++){
+        x=v[j];
+        for(i=j-1;i>=0 && v[i]>x;i--){
+            v[i+1]=v[i];
+        }
+            v[i+1] = x;
+    }
+    for(i=0;i<n;i++)
+        printf("%d\n",v[i]);
 }
-///A funcao abaixo pede do usuario tamanho e valores do vetor, e o verifica se está em ordem crescente comparando uma posiçao N com todas as posiçoes até verificar se o N
-///é maior que o próximo valor do vetor caso sim retorna 0 como falso e 1 como verdadeiro
-int OrdenacaoIterativo(int n,int v[])
-{
-    int e;
-    int c,j;
-    for(c=1; c<n; c++)
-    {
-        for(j=c; j<n; j++)
-        {
-            if(v[c] > v[j])
-            {
-                return 0;
-            }
+void selecao(int n, int v[]){
+    int i,j,min,x;
+    for(i=0;i<n-1;i++){
+        min = i;
+        for(j=i+1;j<n;j++){
+            if(v[j]<v[min])
+                min=j;
+            x=v[i];v[i]=v[min];v[min]=x;
         }
     }
-    return 1;
+    for(i=0;i<n;i++)
+        printf("%d\n",v[i]);
 }
-int OrdenacaoRecursivo(int n,int v[])
-{
-    int x=n-1;
-    if(n==1)
-        return 0;
-    else
-    {
-        if(v[x] > v[x-1])
-        {
-            return OrdenacaoRecursivo(x-1,v);
-        }
-        else
-            return 0;
+void intercala(int p,int q, int r, int v[]){
+    int i,j,k,*w;
+    w = malloc((r-p)*sizeof(int));
+    i = p;j=q;k=0;
+
+    while(i<q && j<r){
+        if(v[i]<=v[j])
+            w[k++]=v[i++];
+        else w[k++]=v[j++];
     }
+    while(i<q) w[k++]=v[i++];
+    while(j<r) w[k++]=v[j++];
+    for(i=p;i<r;i++) v[i] =w[i-p];
+    free (w);
 }
-void menu()
-{
+void mergesorts(int p, int r, int v[]){
+    int i;
+    if(p<r-1){
+        int q = (p+r)/2;
+        mergesorts(p,q,v);
+        mergesorts(q,r,v);
+        intercala(p,q,r,v);
+    }
+    for(i=0;i<r;i++)
+        printf("%d\n",v[i]);
+}
+void menu(){
     int opc,sub;
-    printf("1 - Maximo de um vetor iterativo\n");
-    printf("2 - Maximo de um vetor recursivo\n");
-    printf("3 - Calcular potencia iterativo\n");
-    printf("4 - Calcular potencia recursivo\n");
-    printf("5 - Verificar ordenacao iterativo\n");
-    printf("6 - Verificar ordenacao recursivo\n");
-    printf("7 - Localizar posicao iterativo\n");
-    printf("8 - Localizar posicao recursivo\n");
+    long int n;
+    printf("1 - Insercao\n");
+    printf("2 - Selecao\n");
+    printf("3 - Mergesort\n");
+    printf("4 - Heapsort\n");
+    printf("5 - Quicksort\n");
     scanf("%d",&opc);
     if(opc==1)
     {
         system("cls || clear");
-        sub = MaxvetorIterativo();
-        printf("O maior eh %d",sub);
+        printf("Digite o numero de posicoes do vetor aleatorio: ");
+        scanf("%i",&n);
+        insercao(n,Aleatorio(n));
     }
     else if(opc==2)
     {
         system("cls || clear");
-        int x;
-        printf("Digite o tamanho do vetor: ");
-    scanf("%d",&sub);
-        printf("Digite os valores do vetor: ");
-        int c, v[sub];
-        for(c=0; c<sub; c++)
-        {
-        scanf("%d",&v[c]);
-        }
-        x= MaxvetorRecursivo(sub,v);
-        printf("O maior eh %d",x);
+        printf("Digite o numero de posicoes do vetor aleatorio: ");
+        scanf("%i",&n);
+        selecao(n,Aleatorio(n));
     }
     else if(opc==3)
     {
         system("cls || clear");
-        float x;
-        printf("Digite um valor para a potencia");
-        scanf("%d",&sub);
-        x=CalcPotIterativo(sub);
-        printf("2 elevado a %d eh igual a %f",sub,x);
+        printf("Digite o numero de posicoes do vetor aleatorio: ");
+        scanf("%i",&n);
+        mergesorts(1,n,Aleatorio(n));
     }
-    else if(opc==4)
+    /*else if(opc==4)
     {
         system("cls || clear");
         float x;
@@ -183,15 +122,28 @@ void menu()
         printf("Esta ordenado");
         else
             printf("Nao esta ordenado");
-    }
+    }*/
     else
     {
         system("cls || clear");
         menu();
     }
 }
+
 int main()
 {
     srand(time(NULL));
+    //Aleatorio(1000);
+    int *w;
+    w = malloc(10*sizeof(int));
+   // w = Aleatorio(10);
+    int c;
     menu();
+    //insercao(10,Aleatorio(10));
+    //for(c=0;c<10;c++)
+    //    printf("%d\n",w[c]);
+    //return 0;
+   // free(w);
+    //for(c=0;c<10;c++)
+   //     printf("%d\n",w[c]);
 }
