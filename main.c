@@ -1,13 +1,17 @@
+///Gabriel Albuquerque de Oliveira
+///EP1
+///
+///Algoritmos e Estrutura de Dados - BC3
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 long long int contador; ///Contador para o numero de operacoes realizadas
-void troca (int A, int B)
+void troca (int *A, int *B)
 {
-    int t = A;
-    A = B;
-    B = t;
+    int t = *A;
+    *A = *B;
+    *B = t;
     contador++;
 }
 
@@ -37,8 +41,24 @@ void insercao(int n, int v[])
         }
         v[i+1] = x;
     }
-    for(i=0; i<n; i++)
-        printf("%d\n",v[i]);
+}
+void insercaoRecursiva(int n, int v[])
+{
+    if(n>1)
+    {
+        contador++;
+        insercaoRecursiva(n-1,v);
+        int x = v[n];
+        int i = n-1;
+        while(i>=0 && v[i] > x)
+        {
+            v[i+1] = v[i];
+            i--;
+            contador++;
+        }
+        v[i+1]=x;
+    }
+
 }
 void selecao(int n, int v[])
 {
@@ -57,8 +77,6 @@ void selecao(int n, int v[])
         v[min]=x;
 
     }
-    for(i=0; i<n; i++)
-        printf("%d\n",v[i]);
 }
 void intercala(int p,int q, int r, int v[])
 {
@@ -108,8 +126,6 @@ void merge(int p, int r, int v[])
         intercala(p,q,r,v);
         contador++;
     }
-    //for(i=0; i<r; i++)
-    //     printf("%d\n",v[i]);
 }
 void constroiHeap (int m, int v[])
 {
@@ -120,44 +136,47 @@ void constroiHeap (int m, int v[])
         int f = k+1;
         while (f > 1 && v[f/2] < v[f])
         {
-            troca (v[f/2], v[f]);
+            troca (&v[f/2], &v[f]);
             f = f/2;
             contador++;
         }
         contador++;
     }
 }
-/*void peneira (int m, int v[])
+void peneira (int m, int v[])
 {
     int f = 2;
     while (f <= m)
     {
-        if (f < m && v[f] < v[f+1]){
-                ++f;
-                contador++;
+        if (f < m && v[f] < v[f+1])
+        {
+            ++f;
+            contador++;
         }
-        // f Ž o filho mais valioso de f/2
         if (v[f/2] >= v[f])
             break;
-        troca (v[f/2], v[f]);
+        troca (&v[f/2], &v[f]);
         f *= 2;
         contador++;
     }
-}*/
-void peneira (int m, int v[])
-{
-   int p = 1, f = 2, t = v[1];
-   while (f <= m) {
-      if (f < m && v[f] < v[f+1]){
-       ++f;
-       contador++;
-      }
-      if (t >= v[f]) break;
-      v[p] = v[f];
-      p = f, f = 2*p;
-      contador++;
-   }
-   v[p] = t;
+}
+void peneiraRecursiva(int m, int v[]){
+
+
+    if(m==1){
+        return;
+    }
+    int f = m;
+    peneiraRecursiva(m-1,v);
+    if(f<m && v[f] < v[f+1]){
+        ++f;
+        contador++;
+    }
+    if(v[f/2] >= v[f])
+        return;
+
+    troca (&v[f/2], &v[f]);
+    f=f/2;
 }
 void heap (int n, int v[])
 {
@@ -165,13 +184,14 @@ void heap (int n, int v[])
     constroiHeap (n, v);
     for (m = n; m >= 2; --m)
     {
-        troca (v[1], v[m]);
-        peneira (m-1, v);
+        troca (&v[1], &v[m]);
+        //peneira (m-1, v);
+        peneiraRecursiva(m-1,v);
         contador++;
     }
-    //printf("\n\n");
-    for(m=0; m<n; m++)
-       printf("%d\n",v[m]);
+    for(m=0;m<n;m++){
+        printf("%d\n",v[m]);
+    }
 }
 int separa (int v[], int p, int r)
 {
@@ -200,17 +220,18 @@ int separa (int v[], int p, int r)
 }
 void quicksort (int v[], int p, int r)
 {
-   int j;
-   if (p < r) {
-      j = separa (v, p, r);
-      quicksort (v, p, j-1);
-      quicksort (v, j+1, r);
-      contador++;
-   }
+    int j;
+    if (p < r)
+    {
+        j = separa (v, p, r);
+        quicksort (v, p, j-1);
+        quicksort (v, j+1, r);
+        contador++;
+    }
 }
 void menu()
 {
-    int opc,sub;
+    int opc,sub,x;
     long int n;
     long int *v; //VETOR
     while(1)
@@ -234,6 +255,7 @@ void menu()
                 scanf("%d",&opc);
                 if(opc == 1)
                 {
+                    v = malloc(100*sizeof(int));
                     v = Aleatorio(100);
                     n = 100;
                     break;
@@ -280,6 +302,7 @@ void menu()
             }
             else if(opc == 2)
             {
+                opc = 0;
                 printf("1 - Insercao\n");
                 printf("2 - Selecao\n");
                 printf("3 - Mergesort\n");
@@ -288,12 +311,27 @@ void menu()
                 scanf("%d",&opc);
                 if(opc==1)
                 {
-                    contador = 0;
-                    system("cls || clear");
-                    printf("Contador antes %d\n",contador);
-                    insercao(n,v);
-                    printf("\nContador final %d\n",contador);
-                    break;
+                    printf("1 - Insercao Iterativa\n");
+                    printf("2 - Insercao Recursiva\n");
+                    scanf("%d",&opc);
+                    if(opc == 1)
+                    {
+                        contador = 0;
+                        system("cls || clear");
+                        printf("Contador antes %d\n",contador);
+                        insercao(n,v);
+                        printf("\nContador final %d\n",contador);
+                        break;
+                    }
+                    else if(opc == 2)
+                    {
+                        contador = 0;
+                        system("cls || clear");
+                        printf("Contador antes %d\n",contador);
+                        insercaoRecursiva(n,v);
+                        printf("\nContador final %d\n",contador);
+                        break;
+                    }
                 }
                 else if(opc==2)
                 {
